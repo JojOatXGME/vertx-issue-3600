@@ -9,7 +9,7 @@ public final class Issue3600 {
   }
 
   private static void runSomeThreadsToIncreaseLoad() {
-    for (int i = 0; i < 64; ++i) {
+    for (int i = 0; i < 32; ++i) {
       new Thread(() -> {
         while (true) {}
       }).start();
@@ -26,6 +26,10 @@ public final class Issue3600 {
       }
 
       private void loop() {
+        if (Vertx.currentContext() != context) {
+          System.out.println("Called from invalid context.");
+          return;
+        }
         vertx.setTimer(1, ignore -> loop());
         vertx.deployVerticle(new AbstractVerticle() {}, new DeploymentOptions().setWorker(true), result -> {
           if (Vertx.currentContext() == context) {
