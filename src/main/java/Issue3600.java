@@ -33,10 +33,10 @@ public final class Issue3600 {
         vertx.setTimer(1, ignore -> loop());
         vertx.deployVerticle(new AbstractVerticle() {}, new DeploymentOptions().setWorker(true), result -> {
           if (Vertx.currentContext() == context) {
-            System.out.println("Everything fine");
+            System.out.println("Everything fine. " + context);
           }
           else {
-            System.out.println("Bug!!");
+            System.out.println("Bug!! " + Vertx.currentContext() + " != " + context);
             failed[0] = true;
           }
         });
